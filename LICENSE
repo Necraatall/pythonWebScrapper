@@ -1,0 +1,25 @@
+# License
+
+## GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+
+This is a human-readable summary of (and not a substitute for) the license. You can read the full text of the license [here](https://www.gnu.org/licenses/gpl-3.0.en.html).
+
+### Terms and Conditions
+
+The GNU General Public License (GPL) is a copyleft license that ensures that the software it covers remains free software and that derivative works also follow the principles of free software. Here are some key points:
+
+1. **Freedom to Run the Program:** The GPL allows you the freedom to run the software for any purpose.
+2. **Freedom to Study How the Program Works:** You have access to the source code, enabling you to study how the program works and make changes.
+3. **Freedom to Redistribute Copies:** You have the freedom to redistribute copies of the software, either for free or for a fee.
+4. **Freedom to Improve the Program:** You can modify the software and distribute your modifications, but under the same GPL license terms.
+5. **No Warranty:** The software is provided "as is" without warranty of any kind, expressed or implied.
+6. **Liability:** In no event shall the authors or copyright holders be liable for any claim, damages, or other liability whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software.
+
+### Additional Permissions under GNU GPL Version 3 Section 7
+
+If you modify this Program, or any covered work, by linking or combining it with any modules, libraries or other software, regardless of the license terms of these modules or libraries, and distribute the result without rebalancing the program as a whole to remove or reduce the term of any such license requirements, the licensor of this Program grants you additional permission to convey the resulting work.
+
+## Disclaimer
+
+This summary is provided for informational purposes only and does not replace the full terms of the GNU General Public License Version 3. For the complete terms, please refer to the [official GNU GPL Version 3 documentation](https://www.gnu.org/licenses/gpl-3.0.en.html).
