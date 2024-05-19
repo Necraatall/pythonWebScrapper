@@ -1,0 +1,34 @@
+# Taskfile.yml
+
+version: '3'
+
+tasks:
+  dependencies:
+    desc: "Install poetry dependencies"
+    cmds:
+      - "poetry add requests beautifulsoup4 sqlalchemy psycopg2-binary Mako"
+      - "poetry add --dev pytest coverage ruff dagger-io"
+  init:
+    desc: "Initialize the project"
+    cmds:
+      - "poetry install"
+  lint:
+    desc: "Run ruff linter"
+    cmds:
+      - "ruff src tests"
+  test:
+    desc: "Run tests"
+    cmds:
+      - "pytest --cov=src tests/"
+  fetch_data:
+    desc: "Fetch stock data"
+    cmds:
+      - "python src/scraper.py"
+  analyze:
+    desc: "Analyze fetched data"
+    cmds:
+      - "python src/tasks/analyze_data.py"
+  trivy:
+    desc: "Run Trivy scan"
+    cmds:
+      - "trivy image --severity HIGH,CRITICAL --ignore-unfixed your-image-name"
