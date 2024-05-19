@@ -1,6 +1,6 @@
 # src/models.py
 
-from sqlalchemy import Column, Integer, String, Float, DateTime
+from sqlalchemy import Column, Integer, String, Float, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -11,4 +11,4 @@ class Stock(Base):
     name = Column(String, index=True)
     price = Column(Float)
     change = Column(Float)
-    timestamp = Column(DateTime, server_default="now()")
+    timestamp = Column(DateTime, server_default=func.now())
