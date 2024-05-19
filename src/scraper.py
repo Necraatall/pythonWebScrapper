@@ -2,71 +2,43 @@
 
 import requests
 from bs4 import BeautifulSoup
-from typing import List, Dict
-from sqlalchemy.orm import Session
-from datetime import datetime
-from .db import get_db, engine
-from .models import create_stock_table
 
-BASE_URL = "https://www.kurzy.cz/akcie-cz/burza/"
+def scrape_stock_data(url):
+    # Request the webpage
+    response = requests.get(url)
+    if response.status_code != 200:
+        print(f"Failed to fetch data from {url}")
+        return []
 
-def fetch_data() -> List[Dict]:
-    response = requests.get(BASE_URL)
-    response.raise_for_status()
-
+    # Parse the HTML content
     soup = BeautifulSoup(response.content, 'html.parser')
-    table = soup.find('table', {'class': 'stockTable'})
 
-    data = []
+    # Find the table containing stock data
+    table = soup.find('table', class_='your-table-class')  # Adjust 'your-table-class' accordingly
 
-    for row in table.find_all('tr')[1:]:
-        cols = row.find_all('td')
-        if len(cols) < 12:
-            continue
-        stock_data = {
-            'name': cols[0].get_text(strip=True),
-            'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'price': cols[1].get_text(strip=True),
-            'change': cols[2].get_text(strip=True),
-            'buy_price': cols[3].get_text(strip=True),
-            'sell_price': cols[4].get_text(strip=True),
-            'traded_volume': cols[5].get_text(strip=True),
-            'price_yesterday': cols[6].get_text(strip=True),
-            'trade_count': cols[7].get_text(strip=True),
-            'last_change': cols[8].get_text(strip=True),
-            'last_trade_price': cols[9].get_text(strip=True),
-            'last_trade_volume': cols[10].get_text(strip=True),
-            'last_trade_time': cols[11].get_text(strip=True)
-        }
-        data.append(stock_data)
+    # Extract stock data from the table
+    stock_data = []
+    if table:
+        rows = table.find_all('tr')
+        for row in rows[1:]:  # Skip the header row
+            columns = row.find_all('td')
+            if len(columns) >= 13:  # Assuming there are 13 columns
+                # Extract data from columns and create a dictionary for each stock
+                stock = {
+                    'name': columns[0].text.strip(),
+                    'price': columns[1].text.strip(),
+                    'change': columns[2].text.strip(),
+                    'buy_price': columns[3].text.strip(),
+                    'sell_price': columns[4].text.strip(),
+                    'traded_volume': columns[5].text.strip(),
+                    'price_yesterday': columns[6].text.strip(),
+                    'trade_count': columns[7].text.strip(),
+                    'last_change': columns[8].text.strip(),
+                    'last_trade_price': columns[9].text.strip(),
+                    'last_trade_volume': columns[10].text.strip(),
+                    'last_trade_time': columns[11].text.strip(),
+                    'ks': columns[12].text.strip()
+                }
+                stock_data.append(stock)
 
-    return data
-
-def save_data_to_db(data: List[Dict], db: Session):
-    for stock in data:
-        table = create_stock_table(stock['name'])
-        table.create(engine, checkfirst=True)
-        insert_stmt = table.insert().values(
-            date=stock['date'],
-            price=stock['price'],
-            change=stock['change'],
-            buy_price=stock['buy_price'],
-            sell_price=stock['sell_price'],
-            traded_volume=stock['traded_volume'],
-            price_yesterday=stock['price_yesterday'],
-            trade_count=stock['trade_count'],
-            last_change=stock['last_change'],
-            last_trade_price=stock['last_trade_price'],
-            last_trade_volume=stock['last_trade_volume'],
-            last_trade_time=stock['last_trade_time']
-        )
-        db.execute(insert_stmt)
-    db.commit()
-
-def main():
-    db = next(get_db())
-    data = fetch_data()
-    save_data_to_db(data, db)
-
-if __name__ == "__main__":
-    main()
+    return stock_data
