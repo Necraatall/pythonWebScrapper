@@ -2,22 +2,22 @@
 
 import requests
 from bs4 import BeautifulSoup
-from typing import List, Dict
 
-def fetch_stock_data(url: str) -> List[Dict[str, str]]:
-    """Fetches stock data from the given URL."""
+def fetch_stock_data(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    stocks = []
-    for row in soup.select('table tbody tr'):
-        stock = {
-            'name': row.select_one('td.name').text,
-            'price': row.select_one('td.price').text,
-            'change': row.select_one('td.change').text,
-        }
-        stocks.append(stock)
-    return stocks
+    data = []
+    for row in soup.find_all('tr'):
+        columns = row.find_all('td')
+        if len(columns) >= 3:
+            data.append({
+                'name': columns[0].text,
+                'price': float(columns[1].text),
+                'change': float(columns[2].text),
+            })
+
+    return data
 
 if __name__ == "__main__":
     data = fetch_stock_data("https://www.kurzy.cz/akcie-cz/burza/")
