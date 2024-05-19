@@ -1,28 +1,23 @@
-# dagger.py
+# src/dagger_io.py
 
 import dagger
 
-with dagger.Connection(dagger.Config.defaults()) as client:
-    async def lint():
-        await client.container().from_("python:3.12").with_exec([
-            "pip install poetry", 
-            "poetry install", 
-            "poetry run ruff src tests"
-        ]).run()
+async def main():
+    async with dagger.Connection() as client:
+        # Define your tasks
+        task_init = client.task(name="init")
+        task_lint = client.task(name="lint")
+        task_test = client.task(name="test")
+        task_fetch_data = client.task(name="fetch_data")
+        task_analyze = client.task(name="analyze")
 
-    async def test():
-        await client.container().from_("python:3.12").with_exec([
-            "pip install poetry", 
-            "poetry install", 
-            "poetry run pytest --cov=src tests/"
-        ]).run()
+        # Run tasks
+        await task_init.run()
+        await task_lint.run()
+        await task_test.run()
+        await task_fetch_data.run()
+        await task_analyze.run()
 
-    async def trivy_scan():
-        await client.container().from_("aquasec/trivy:latest").with_exec([
-            "trivy image --severity HIGH,CRITICAL --ignore-unfixed your-image-name"
-        ]).run()
-
-    if __name__ == "__main__":
-        lint()
-        test()
-        trivy_scan()
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())

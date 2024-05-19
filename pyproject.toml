@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "stock-scrapper"
 version = "0.1.0"
-description = "A stock scraper using Dagger.io"
+description = "description = "A project to scrape stock data and analyze them using Dagger.io"
 authors = ["Necraatall <milan.zlamal.qa@gmail.com>"]
 license = "GPL-3.0"
 readme = "README.md"

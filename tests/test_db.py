@@ -1,29 +1,27 @@
 # tests/test_db.py
 
-import unittest
+import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from src.models import Base, Stock
+from src.db import metadata, get_db
 
-class TestDatabase(unittest.TestCase):
+DATABASE_URL = "sqlite:///./test.db"
 
-    def setUp(self):
-        self.engine = create_engine('sqlite:///:memory:')
-        Base.metadata.create_all(bind=self.engine)
-        self.Session = sessionmaker(bind=self.engine)
-        self.db_session = self.Session()
+engine = create_engine(DATABASE_URL)
+TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-    def tearDown(self):
-        self.db_session.close()
+@pytest.fixture(scope="module")
+def db():
+    metadata.create_all(bind=engine)
+    db = TestingSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+    metadata.drop_all(bind=engine)
 
-    def test_stock_model(self):
-        stock = Stock(name="Test Stock", price=123.45, change=1.23)
-        self.db_session.add(stock)
-        self.db_session.commit()
-        
-        result = self.db_session.query(Stock).filter_by(name="Test Stock").first()
-        self.assertEqual(result.price, 123.45)
-        self.assertEqual(result.change, 1.23)
-
-if __name__ == '__main__':
-    unittest.main()
+def test_create_table(db):
+    from src.models import create_stock_table
+    table = create_stock_table("Test Stock")
+    table.create(engine, checkfirst=True)
+    assert table.exists(engine)
