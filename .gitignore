@@ -1,4 +1,0 @@
-### Standart git ignore ###
-.vscode/
-# .env file
-.env
