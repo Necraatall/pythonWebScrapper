@@ -1,4 +1,6 @@
 # Stock Scrapper
+## THIS PROJECT IS ONLY TO MAKE EXPERIENCE WITH CONVENTIONAL COMMITS, THEIR LIMITATIONS, WHAT IS GOOD GRANULARITY, LEARN HOW TO BETTER NAME BRANCHES, POC DAGGER-IO AND FIRST TRY TO SCRAP SOMETHING
+
 
 A Python project to scrape stock data from [kurzy.cz](https://www.kurzy.cz/akcie-cz/burza/), save it to a PostgreSQL database, and perform data analysis. The project uses Dagger.io for CI/CD automation and Taskfile for task management.
 
